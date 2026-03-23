@@ -1,0 +1,71 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0f0f0f;
+  color: white;
+}
+
+/* NAVBAR */
+nav {
+  background: #111;
+  padding: 15px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: bold;
+  color: orange;
+}
+
+/* CONTAINER */
+.container {
+  padding: 20px;
+}
+
+/* CARD UI */
+.card {
+  background: #1a1a1a;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+/* INPUT */
+input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+}
+
+/* BUTTON */
+button {
+  background: orange;
+  border: none;
+  padding: 10px;
+  margin-top: 10px;
+  width: 100%;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* FILE ITEM */
+.file {
+  background: #222;
+  padding: 12px;
+  margin-top: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.file:hover {
+  background: #333;
+}
+
+/* ADMIN PANEL */
+#adminPanel {
+  border: 1px solid orange;
+}

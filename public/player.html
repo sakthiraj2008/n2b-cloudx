@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playing Video - VideoCloud</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        body {
+            margin: 0;
+            background: #0f0c29;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .player-container {
+            width: 90%;
+            max-width: 1000px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        video {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            background: black;
+        }
+
+        .controls-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-back { background: rgba(255,255,255,0.1); color: white; }
+        .btn-download { background: #0088cc; color: white; }
+        .btn:hover { opacity: 0.8; transform: translateY(-2px); }
+
+        h2 { margin: 10px 0; font-size: 1.2rem; opacity: 0.9; }
+    </style>
+</head>
+<body>
+
+    <div class="player-container animate__animated animate__fadeIn">
+        <video id="videoPlayer" controls autoplay>
+            <source id="videoSource" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+
+        <h2 id="videoTitle">Loading video...</h2>
+
+        <div class="controls-row">
+            <a href="index.html" class="btn btn-back">← Back to Library</a>
+            <a id="downloadBtn" href="#" download class="btn btn-download">Download Video</a>
+        </div>
+    </div>
+
+    <script>
+        // Get the file_id from the URL ?id=...
+        const urlParams = new URLSearchParams(window.location.search);
+        const fileId = urlParams.get('id');
+        const fileName = urlParams.get('name') || "Video File";
+
+        if (fileId) {
+            const streamUrl = `/stream/${fileId}`;
+            
+            // Set Player Source
+            document.getElementById('videoSource').src = streamUrl;
+            document.getElementById('videoPlayer').load();
+            
+            // Set Title and Download Link
+            document.getElementById('videoTitle').textContent = decodeURIComponent(fileName);
+            const dlBtn = document.getElementById('downloadBtn');
+            dlBtn.href = streamUrl;
+            dlBtn.setAttribute('download', fileName);
+        } else {
+            alert("No Video ID found!");
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VideoCloud - Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        :root {
+            --primary: #0088cc;
+            --pro: #00ff88;
+            --free: #ffd700;
+            --glass: rgba(255, 255, 255, 0.08);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: #0f0c29;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Background Blobs */
+        .blob {
+            position: fixed;
+            width: 400px; height: 400px;
+            background: var(--primary);
+            filter: blur(100px);
+            border-radius: 50%;
+            z-index: -1;
+            opacity: 0.4;
+        }
+        .b1 { top: -100px; left: -100px; }
+        .b2 { bottom: -100px; right: -100px; }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin-top: 40px;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .plan-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #000;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .tab-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        /* Upload Section */
+        .upload-zone {
+            border: 2px dashed rgba(255,255,255,0.2);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            transition: 0.3s;
+        }
+        .upload-zone:hover { border-color: var(--primary); background: rgba(0,136,204,0.05); }
+
+        #videoInput { display: none; }
+        .upload-label { cursor: pointer; color: var(--primary); font-weight: bold; }
+
+        .progress-container {
+            margin-top: 20px;
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            display: none;
+        }
+        .progress-bar { width: 0%; height: 100%; background: var(--primary); transition: 0.3s; }
+
+        /* History List */
+        .history-list { list-style: none; padding: 0; }
+        .history-item {
+            background: rgba(255,255,255,0.03);
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .btn-play { background: #28a745; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; }
+        .logout-btn { background: #ff4b2b; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; }
+
+        .video-player-container { display: none; margin-top: 20px; }
+        video { border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.4); }
+    </style>
+</head>
+<body>
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+
+    <div class="container animate__animated animate__fadeIn">
+        <header>
+            <div>
+                <h1 style="margin: 0; font-size: 24px;">VideoCloud</h1>
+                <span id="userPlanBadge" class="plan-badge">FREE PLAN</span>
+            </div>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </header>
+
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="switchTab('uploadTab', this)">Upload</button>
+            <button class="tab-btn" onclick="switchTab('historyTab', this)">My Library</button>
+        </div>
+
+        <div id="uploadTab" class="tab-content">
+            <div class="upload-zone">
+                <p id="statusMsg">Drag and drop or click to select a video</p>
+                <label for="videoInput" class="upload-label">Browse Files</label>
+                <input type="file" id="videoInput" accept="video/*" onchange="handleFileSelect()">
+                
+                <div class="progress-container" id="progCont">
+                    <div class="progress-bar" id="progBar"></div>
+                </div>
+                <button id="startUploadBtn" onclick="uploadVideo()" style="margin-top:20px; display:none; background:var(--primary); color:white; border:none; padding:10px 30px; border-radius:8px; cursor:pointer;">Start Upload</button>
+            </div>
+        </div>
+
+        <div id="historyTab" class="tab-content" style="display: none;">
+            <input type="text" id="searchBox" placeholder="Search your videos..." onkeyup="searchVideos()" style="width:100%; padding:12px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:white; margin-bottom:20px;">
+            <ul id="historyList" class="history-list">
+                </ul>
+        </div>
+
+        <div id="playerTab" class="tab-content video-player-container">
+            <button onclick="switchTab('historyTab')" style="background:none; border:none; color:var(--primary); cursor:pointer; margin-bottom:10px;">← Back to Library</button>
+            <video id="mainPlayer" controls width="100%"></video>
+            <div id="videoMeta" style="margin-top:15px; padding:15px; background:rgba(255,255,255,0.05); border-radius:10px;"></div>
+        </div>
+    </div>
+
+    <script src="script.js"> </script>
+</body>
+</html>
