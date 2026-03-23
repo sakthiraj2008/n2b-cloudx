@@ -29,6 +29,33 @@ async function uploadVideo() {
     }
 }
 
+function handleFileSelect() {
+    const fileInput = document.getElementById('videoInput');
+    const status = document.getElementById('statusMsg');
+    const uploadBtn = document.getElementById('startUploadBtn');
+    const progCont = document.getElementById('progCont');
+
+    if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        
+        // Log to console for debugging
+        console.log("File Selected:", file.name, file.size);
+
+        // Update the UI
+        status.innerHTML = `<strong>Selected:</strong> ${file.name} <br> 
+                           <small>Size: ${(file.size / (1024 * 1024)).toFixed(2)} MB</small>`;
+        
+        // Show the hidden Upload button
+        uploadBtn.style.display = 'inline-block';
+        
+        // Ensure progress bar is hidden until upload starts
+        progCont.style.display = 'none';
+    } else {
+        status.textContent = "No file selected.";
+        uploadBtn.style.display = 'none';
+    }
+}
+
 function saveToHistory(name, id) {
     let history = JSON.parse(localStorage.getItem('myVideos')) || [];
     history.unshift({ 
