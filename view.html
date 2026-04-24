@@ -1,0 +1,24 @@
+<div class="container glass">
+    <h2 id="name">Loading...</h2>
+    <div id="media-container"></div>
+    <br>
+    <a id="dl-link" class="btn" href="#" download>Download Now</a>
+</div>
+
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const fileId = params.get('id');
+    const BOT_TOKEN = "YOUR_BOT_TOKEN";
+
+    async function getFile() {
+        // Fetch file path from Telegram API
+        const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getFile?file_id=${fileId}`);
+        const json = await res.json();
+        const filePath = json.result.file_path;
+        const finalUrl = `https://api.telegram.org/file/bot${BOT_TOKEN}/${filePath}`;
+
+        document.getElementById('dl-link').href = finalUrl;
+        document.getElementById('media-container').innerHTML = `<video src="${finalUrl}" controls style="width:100%"></video>`;
+    }
+    getFile();
+</script>
