@@ -1,0 +1,6 @@
+{
+  "supabaseUrl": "https://your-project-id.supabase.co",
+  "supabaseAnonKey": "your-anon-key",
+  "telegramBotToken": "your-bot-token",
+  "adminPassword": "your-secure-password"
+}
